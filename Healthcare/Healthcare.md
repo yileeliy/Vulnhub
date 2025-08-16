@@ -179,7 +179,7 @@ Task Completed
 
 ### Shellshock
 
-该漏洞存在与bash 4.3之前。bash被执行过程中，会自动加载环境变量，如果环境变量的某个值设计成`() { :; }; touch /tmp/pwnd`，那么bash会将`() { :; };`当成一个函数，而`touch /tmp/pwnd`会被当成函数体后的语句被执行。测试主机存在shellshock漏洞的命令如下：
+该漏洞存在于bash 4.3之前。bash被执行过程中，会自动加载环境变量，如果环境变量的某个值设计成`() { :; }; touch /tmp/pwnd`，那么bash会将`() { :; };`当成一个函数，而`touch /tmp/pwnd`会被当成函数体后的语句被执行。测试主机存在shellshock漏洞的命令如下：
 
 ```bash
 env X='() { :; }; echo "CVE-2014-6271 vulnerable"' bash -c id
