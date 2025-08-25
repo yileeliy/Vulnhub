@@ -52,11 +52,11 @@ Nmap done: 1 IP address (1 host up) scanned in 14.94 seconds
 
 在21端口处发现lol.pcap文件。可以选择使用wireshark打开，但是使用strings命令也不影响最终结果。
 
-![image-20250824190603430](.\Tr0ll.assets\image-20250824190603430.png)
+![image-20250824190603430](./Tr0ll.assets/image-20250824190603430.png)
 
 总之，这是一段有关FTP协议的流量，具体实现就是远程打开一个名为`secret_stuff.txt`文本文件，文件内容中有个词值得注意那就是`sup3rs3cr3tdirlol`，我看其中有`dir`字符，尝试将它视为隐藏目录名称。
 
-![image-20250824190658504](.\Tr0ll.assets\image-20250824190658504.png)
+![image-20250824190658504](./Tr0ll.assets/image-20250824190658504.png)
 
 
 
@@ -64,15 +64,15 @@ Nmap done: 1 IP address (1 host up) scanned in 14.94 seconds
 
 尝试访问目录`sup3rs3cr3tdirlol`。
 
-![image-20250824192037084](.\Tr0ll.assets\image-20250824192037084.png)
+![image-20250824192037084](./Tr0ll.assets/image-20250824192037084.png)
 
 我们可以利用工具html2text美化curl输出结果。
 
-![image-20250824192259260](.\Tr0ll.assets\image-20250824192259260.png)
+![image-20250824192259260](./Tr0ll.assets/image-20250824192259260.png)
 
 尝试下载并测试未知文件`roflmao`。
 
-![image-20250824192619370](.\Tr0ll.assets\image-20250824192619370.png)
+![image-20250824192619370](./Tr0ll.assets/image-20250824192619370.png)
 
 
 
@@ -722,6 +722,7 @@ except:
 这里我通过busybox反弹shell成功get root shell。
 
 ![image-20250825173049486](.\Tr0ll.assets\image-20250825173049486.png)
+
 
 
 
