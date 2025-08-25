@@ -48,7 +48,7 @@ Nmap done: 1 IP address (1 host up) scanned in 14.94 seconds
 
 
 
-## Lop.pcap
+## Lol.pcap
 
 在21端口处发现lol.pcap文件。可以选择使用wireshark打开，但是使用strings命令也不影响最终结果。
 
@@ -722,6 +722,7 @@ except:
 这里我通过busybox反弹shell成功get root shell。
 
 ![image-20250825173049486](./Tr0ll.assets/image-20250825173049486.png)
+
 
 
 
