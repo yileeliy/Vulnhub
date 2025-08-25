@@ -80,23 +80,23 @@ Nmap done: 1 IP address (1 host up) scanned in 14.94 seconds
 
 首先使用file命令识别该文件的文件类型。
 
-![image-20250824192942083](.\Tr0ll.assets\image-20250824192942083.png)
+![image-20250824192942083](./Tr0ll.assets/image-20250824192942083.png)
 
 尝试工具exiftool后没有发现有价值的信息，于是直接赋执行权限，然后执行看结果。程序执行后返回`Find address 0x0856BF to proceed`，说实话一开始我以为这会跟二进制逆向或者缓冲区溢出有关，然而这里是一个troll。
 
-![image-20250824192900357](.\Tr0ll.assets\image-20250824192900357.png)
+![image-20250824192900357](./Tr0ll.assets/image-20250824192900357.png)
 
 使用strings命令后也没发现突破口，我不会用gdb调试器因此没有进一步分析，但是打完后我看别人的[wp](https://devl00p.github.io/posts/Solution-du-CTF-Tr0ll/)得知这个地方只运行了一个printf函数，并打印了一段`Find address 0x0856BF to proceed`。
 
-![image-20250824211143544](.\Tr0ll.assets\image-20250824211143544.png)
+![image-20250824211143544](./Tr0ll.assets/image-20250824211143544.png)
 
 使用金山翻译，还是没明白这段字符想表达什么，这时脑子还是偏向缓冲区溢出。可是我打过缓冲区溢出的靶机，有一种直觉告诉我这绝不是缓冲区溢出，但这又是什么呢？
 
-![image-20250824214114682](.\Tr0ll.assets\image-20250824214114682.png)
+![image-20250824214114682](./Tr0ll.assets/image-20250824214114682.png)
 
 好吧，这个时候必须承认：我迷路了！因此，我开始从头开始信息收集，甚至使用默认凭据爆破ssh和ftp，但是什么也没得到，感觉brain像被fuck了一样，在苦恼了几小时后决定使用Gemini为我提供新思路。说实话这个AI不太行，也许我该使用它的升级版。但是当看到`直接跳转到目标地址`，我瞬间明白了一切，如果你打ctf早在翻译这段字符后就会发现！
 
-![image-20250824212704682](.\Tr0ll.assets\image-20250824212704682.png)
+![image-20250824212704682](./Tr0ll.assets/image-20250824212704682.png)
 
 
 
@@ -104,27 +104,27 @@ Nmap done: 1 IP address (1 host up) scanned in 14.94 seconds
 
 将特殊字符`0x0856BF`作为Web目录访问，发现`good_luck`和`this_folder_contains_the_password`两个目录。
 
-![image-20250824213321242](.\Tr0ll.assets\image-20250824213321242.png)
+![image-20250824213321242](./Tr0ll.assets/image-20250824213321242.png)
 
 ### good_luck
 
 打开目录后有一个名称为which_one_lol.txt的文本文件。根据翻译，文件名称可以理解为`哪个哈哈`，这个我并没有在意，可能只是作者的恶作剧。
 
-![image-20250824213829037](.\Tr0ll.assets\image-20250824213829037.png)
+![image-20250824213829037](./Tr0ll.assets/image-20250824213829037.png)
 
 打开which_one_lol.txt会出现如下字符，它们或许是用户名、密码、web目录、web文件。
 
-![image-20250824213953980](.\Tr0ll.assets\image-20250824213953980.png)
+![image-20250824213953980](./Tr0ll.assets/image-20250824213953980.png)
 
 ### this_folder_contains_the_password
 
 打开目录后有一个名称为Pass.txt的文本文件。注意，这个文件名没啥好翻译的，但是这个目录名要重点关注一下，因为它是破局的关键。经过翻译目录名应该理解为`此文件夹包含密码`。
 
-![image-20250824215158171](.\Tr0ll.assets\image-20250824215158171.png)
+![image-20250824215158171](./Tr0ll.assets/image-20250824215158171.png)
 
 打开Pass.txt会出现如下字符，一眼万年，我真的认为这就是某位用户的密码！
 
-![image-20250824215754662](.\Tr0ll.assets\image-20250824215754662.png)
+![image-20250824215754662](./Tr0ll.assets/image-20250824215754662.png)
 
 
 
@@ -452,7 +452,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-08-25 02:12:
 
 在爆破前，你可能会注意这里有个ssh用户名枚举的漏洞，就在nmap 扫描结果那里。通过这个漏洞我确认which_one_lol.txt里面的10个用户名是真实存在的，甚至我猜的`troll`也是存在的，拿到ssh shell 后也证实了这些。
 
-![image-20250825153546998](.\Tr0ll.assets\image-20250825153546998.png)
+![image-20250825153546998](./Tr0ll.assets/image-20250825153546998.png)
 
 尝试对22端口进行爆破。这里出现爆破受阻的现象，通过打完后看别人的[wp](https://devl00p.github.io/posts/Solution-du-CTF-Tr0ll/)了解到目标存在[fail2ban](https://github.com/fail2ban/fail2ban)。然后又通过测试发现不能多个用户名并发爆破，即使用hydra -W选项也没什么用，但是接受一次爆破一个用户。 当然，可以使用hydra -R ,等待22端口重新恢复连接。
 
@@ -553,7 +553,7 @@ Good_job_:)!
 
 我将10个用户名和troll配合rockyou.txt、fastcrack.txt一起爆破了一段时间也没有任何结果。好吧，这里我再一次迷路了，询问AI也无果，在过了两三天后我忍不住看别人的wp，才发现这里又是一个troll。
 
-![image-20250825174128681](.\Tr0ll.assets\image-20250825174128681.png)
+![image-20250825174128681](./Tr0ll.assets/image-20250825174128681.png)
 
 让我们回到`0x0856BF`目录上，请仔细观察子目录`this_folder_contains_the_password`，如果你打ctf或许在那时就会嘲笑我，这么明显的提示都看不出来。是的，目录里的文件名`Pass.txt`也可以作为一个密码，让我们配合hydra -R继续尝试！
 
@@ -562,23 +562,23 @@ Good_job_:)!
 └─$ hydra -W 10 -vV -t 1 -f -L ./users.txt -p 'Pass.txt' ssh://10.0.0.130
 ```
 
-![image-20250825154815360](.\Tr0ll.assets\image-20250825154815360.png)
+![image-20250825154815360](./Tr0ll.assets/image-20250825154815360.png)
 
 成功get ssh shell，取得一个立足点。但是每过5分钟会断开一次，相当难受！
 
-![image-20250825155951742](.\Tr0ll.assets\image-20250825155951742.png)
+![image-20250825155951742](./Tr0ll.assets/image-20250825155951742.png)
 
 造成我们难受的原因就是/opt/lmao.py。
 
-![image-20250825160930476](.\Tr0ll.assets\image-20250825160930476.png)
+![image-20250825160930476](./Tr0ll.assets/image-20250825160930476.png)
 
 而且是每5分钟难受一次。
 
-![image-20250825161033616](.\Tr0ll.assets\image-20250825161033616.png)
+![image-20250825161033616](./Tr0ll.assets/image-20250825161033616.png)
 
 顺便看看令人讨厌的fail2ban。
 
-![image-20250825161324486](.\Tr0ll.assets\image-20250825161324486.png)
+![image-20250825161324486](./Tr0ll.assets/image-20250825161324486.png)
 
 
 
@@ -638,11 +638,11 @@ drwxr-xr-x 20 root     root         620 Aug 25 01:00 ..
 -rw-rw-r--  1 overflow overflow 2940928 Aug 21 07:52 pspy32
 ```
 
-![image-20250825162811625](.\Tr0ll.assets\image-20250825162811625.png)
+![image-20250825162811625](./Tr0ll.assets/image-20250825162811625.png)
 
 通过pspy确认cleaner.py为root权限执行的定时任务文件。
 
-![image-20250825162925552](.\Tr0ll.assets\image-20250825162925552.png)
+![image-20250825162925552](./Tr0ll.assets/image-20250825162925552.png)
 
 ### cronlog
 
@@ -721,7 +721,8 @@ except:
 
 这里我通过busybox反弹shell成功get root shell。
 
-![image-20250825173049486](.\Tr0ll.assets\image-20250825173049486.png)
+![image-20250825173049486](./Tr0ll.assets/image-20250825173049486.png)
+
 
 
 
