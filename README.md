@@ -1,2 +1,2 @@
 # Vulnhub
-打完所有vulnhub靶机
+All VulnHub targets have been completed.
